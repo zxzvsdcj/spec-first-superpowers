@@ -1,7 +1,10 @@
 """spec-first-superpowers v3 Skill 完整性验证脚本"""
 import sys, os, re
 
-SKILL_DIR = r"C:\Users\Hades\.cursor\skills\spec-first-superpowers"
+SKILL_DIR = os.environ.get(
+    "SKILL_DIR",
+    os.path.dirname(os.path.abspath(__file__)),
+)
 results = []
 passed = 0
 failed = 0
@@ -160,7 +163,10 @@ if os.path.isfile(sp_path):
         check(f"synergy-patterns.md has {chain}", chain in sp, f"missing: {chain}")
 
 # ── 12. 依赖 Skill 已安装 ─────────────────────────────
-skills_root = r"C:\Users\Hades\.cursor\skills"
+skills_root = os.environ.get(
+    "SKILLS_ROOT",
+    os.path.join(os.path.expanduser("~"), ".cursor", "skills"),
+)
 for skill in [
     "using-superpowers",
     "planning-with-files",

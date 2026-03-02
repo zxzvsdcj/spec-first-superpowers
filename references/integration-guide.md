@@ -16,7 +16,7 @@
 | Skill | 职责 | 必需？ | 触发阶段 |
 |-------|------|--------|---------|
 | `using-superpowers` | 加载 Superpowers 方法论 | 是 | 阶段 4 |
-| `brainstorming` | 设计探索（编码前） | 是 | 阶段 1/4 |
+| `brainstorming` | 设计探索（编码前，融合于 Spec 阶段） | 是 | 阶段 1 |
 | `writing-plans` | 实施计划（bite-sized steps） | 是 | 阶段 2 |
 | `test-driven-development` | TDD RED-GREEN-REFACTOR | 是 | 阶段 4 |
 | `requesting-code-review` | 代码审查 | 是 | 阶段 4 |
@@ -110,7 +110,7 @@ Spec-Kit    OpenSpec
 4. **断点定位**：从最后一个已完成步骤的下一步继续
 5. **向用户汇报**：当前状态 + 下一步建议 → 确认后继续
 
-来自 `planning-with-files` 的 session-catchup 机制。
+触发方式：AI 在会话开始时检测到 `task_plan.md` 存在即自动执行，无需用户手动调用。此协议融合自 `planning-with-files` 的 session-catchup 机制。
 
 ## 复杂度分级决策树
 
