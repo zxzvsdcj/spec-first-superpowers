@@ -23,27 +23,27 @@
 ## 目录结构
 
 ```
-spec-first-superpowers/
-├── SKILL.md                              # 核心编排逻辑 (v3, 88 行)
-├── README.md
-├── 使用说明.md
-├── install-all.sh
-├── test_skill.py                         # 验证脚本 (79 项检查)
-├── SUMMARY.md                            # 本文档
-├── findings.md                           # 深度分析报告
-├── task_plan.md                          # 实施计划
+spec-first-superpowers/                     # 仓库根目录
+├── skills/
+│   └── spec-first-superpowers/             # ← npx skills add 只安装这个目录
+│       ├── SKILL.md                        # 核心编排逻辑 (v3, 87 行)
+│       ├── references/
+│       │   ├── spec-kit-workflow.md        # Spec-Kit 工作流 + 闸门
+│       │   ├── openspec-workflow.md        # OpenSpec 工作流 + 快速路径
+│       │   ├── integration-guide.md        # 集成指南 + 会话恢复 + 错误链
+│       │   ├── quality-gates.md            # G0-G4 质量闸门标准
+│       │   └── synergy-patterns.md         # 5 条协同链
+│       └── assets/
+│           └── constitutions/
+│               ├── openspec-constitution.md # OpenSpec 宪法 v2.0
+│               └── spec-kit-constitution.md # Spec-Kit 宪法 v2.0
 ├── .cursor/
-│   └── 00-spec-first-superpowers.mdc     # 守门规则
-├── references/
-│   ├── spec-kit-workflow.md              # Spec-Kit 工作流 + 闸门
-│   ├── openspec-workflow.md              # OpenSpec 工作流 + 快速路径
-│   ├── integration-guide.md             # 集成指南 + 会话恢复 + 错误链
-│   ├── quality-gates.md                 # G0-G4 质量闸门标准
-│   └── synergy-patterns.md              # 5 条协同链
-└── assets/
-    └── constitutions/
-        ├── openspec-constitution.md      # OpenSpec 宪法 v2.0
-        └── spec-kit-constitution.md      # Spec-Kit 宪法 v2.0
+│   └── 00-spec-first-superpowers.mdc       # 守门规则
+├── test_skill.py                           # 验证脚本 (79 项检查)
+├── install-all.sh / install-all.ps1        # 安装脚本
+├── README.md / 使用说明.md / SUMMARY.md
+├── findings.md / task_plan.md              # 开发过程文档
+└── AI 编程三剑客.pdf
 ```
 
 ## 测试结果
@@ -55,4 +55,8 @@ Total: 79  |  Passed: 79  |  Failed: 0
 
 ## 使用方式
 
-在任意 Cursor 项目中输入 `/super-spec` 即可激活规范驱动开发工作流。
+```bash
+npx skills add zxzvsdcj/spec-first-superpowers
+```
+
+安装后在 Cursor 聊天中输入 `/super-spec` 即可激活规范驱动开发工作流。
