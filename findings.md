@@ -1,107 +1,194 @@
-# 深度分析报告：5 个开源项目精华提取与协同优化
+# 五大核心工具官方更新调研报告
 
-> 分析日期：2026-03-02
-> 目标：极致优化 spec-first-superpowers Skill，最大化 5 个开源项目的协同价值
+> 调研日期：2026-03-19
+> 目标：全面审查五项核心工具的官方更新，指导 spec-first-superpowers v4 优化
 
-## 1. 各项目精华提取
+## 1. Spec-Kit (github/spec-kit) — 重大更新
 
-### 1.1 Spec-Kit (github/spec-kit)
+### 新增内容
 
-| 精华能力 | 当前利用度 | 优化空间 |
-|----------|-----------|---------|
-| 宪法(Constitution)作为不可妥协原则 | 中 — 仅在开头提及 | 应在**每个质量闸门**主动校验宪法条款 |
-| spec/plan/tasks 三文档分离 (What vs How) | 高 | 保持 |
-| `specify check` 完整性验证 | 未利用 | 应整合到闸门 G1 |
-| 用户确认门控 | 高 | 保持 |
-| `.specify/` 结构化工件管理 | 中 | 与 planning-with-files 统一管理 |
+| 变更 | 详情 | 对本项目影响 |
+|------|------|-------------|
+| **安装方式变更** | `uv tool install specify-cli --from git+...` (替代旧方式) | 需更新安装说明 |
+| **新命令 `/speckit.implement`** | 直接执行所有任务并按计划构建功能 | 需纳入 spec-kit-workflow.md |
+| **新命令 `/speckit.clarify`** | 澄清不明确区域（原 `/quizme`） | 已有但需确认名称同步 |
+| **新命令 `/speckit.analyze`** | 跨工件一致性和覆盖率分析（建议在 `/speckit.tasks` 后、`/speckit.implement` 前运行） | **新增——应纳入闸门流程** |
+| **新命令 `/speckit.checklist`** | 生成自定义质量检查清单（"unit tests for English"） | 可整合到 G1/G2 |
+| **扩展 & 预设系统** | `.specify/extensions/` + `.specify/presets/` 实现工作流定制化 | 更新 workflow 文档 |
+| **支持 20+ AI Agent** | Cursor, Claude Code, Gemini CLI, Codex, Windsurf, Kiro 等 | 更新兼容性说明 |
+| **Plugin Marketplace** | Claude Code 官方市场支持 `/plugin install` | 更新安装指南 |
+| **社区 Walkthrough** | 5 个示例（Greenfield/Brownfield/.NET/Java/Go） | 可链接参考 |
+| **`--ai-skills` 标志** | 将 Prompt.MD 模板安装为 agent skills | 新功能支持 |
 
-### 1.2 OpenSpec (Fission-AI/OpenSpec)
+### 命令体系（最新完整版）
 
-| 精华能力 | 当前利用度 | 优化空间 |
-|----------|-----------|---------|
-| 变更驱动(Change-based)轻量流程 | 高 | 保持 |
-| `/opsx:ff` 快速推进（需求已清晰时） | 未利用 | **作为复杂度分级的快速路径** |
-| config.yaml 项目规则声明 | 低 | 可与宪法交叉引用 |
-| `/opsx:archive` 归档管理 | 中 | 与 progress.md 同步 |
-| 逐步 `/opsx:continue` 增量创建 | 中 | 保持 |
+| 命令 | 类型 | 说明 |
+|------|------|------|
+| `/speckit.constitution` | 核心 | 创建/更新项目治理原则 |
+| `/speckit.specify` | 核心 | 定义需求和用户故事 |
+| `/speckit.plan` | 核心 | 创建技术实现计划 |
+| `/speckit.tasks` | 核心 | 生成可执行任务列表 |
+| `/speckit.implement` | **核心(新)** | 执行所有任务 |
+| `/speckit.clarify` | 可选 | 澄清不明确区域 |
+| `/speckit.analyze` | **可选(新)** | 跨工件一致性分析 |
+| `/speckit.checklist` | **可选(新)** | 生成质量检查清单 |
 
-### 1.3 Superpowers (obra/superpowers)
+---
 
-| 精华能力 | 当前利用度 | 优化空间 |
-|----------|-----------|---------|
-| 技能优先级体系 (Process → Implementation) | 低 | 应在编排中强制执行 |
-| brainstorming 硬门控 (设计先于编码) | 中 | 与 Spec 阶段融合而非串行重复 |
-| TDD RED-GREEN-REFACTOR 铁律 | 中 | 保持 |
-| **两阶段审查** (spec 符合 + 代码质量) | **未利用** | **应纳入执行阶段闸门** |
-| **Subagent-Driven Development** | **未利用** | **作为执行阶段的可选策略** |
-| systematic-debugging 4 阶段 + 3 次切换 | 低 — 仅"按需" | 应集成到错误处理链 |
-| verification-before-completion 证据铁律 | 中 | 应绑定到 progress.md |
-| finishing-a-development-branch 收尾 | **未利用** | **应纳入归档阶段** |
-| executing-plans 批次检查点 | **未利用** | 作为执行选项之一 |
+## 2. OpenSpec (Fission-AI/OpenSpec) — 架构级重构
 
-### 1.4 planning-with-files (othmanadi/planning-with-files)
+### 核心变更：OPSX 成为标准工作流
 
-| 精华能力 | 当前利用度 | 优化空间 |
-|----------|-----------|---------|
-| 文件即记忆 (Context Window=RAM, File=Disk) | 高 | 保持 |
-| **session-catchup.py 会话恢复** | **未利用** | **应集成到阶段 0** |
-| 2-Action Rule (每 2 次搜索保存) | 低 | 应在全流程强制 |
-| **Read Before Decide 模式** | **未利用** | **每个阶段转换前必须重读** |
-| 3-Strike Error Protocol | 低 | 应与 systematic-debugging 联动 |
-| 5-Question Reboot Test | **未利用** | 作为上下文恢复的验证 |
-| 错误日志表 (Error/Attempt/Resolution) | 低 | 标准化到 progress.md |
-| 模板系统 (templates/) | 中 | 保持 |
+旧工作流 (`/openspec:proposal`) 已被 OPSX 替代。关键哲学转变：**"Actions, not phases"**。
 
-### 1.5 ui-ux-pro-max (nextlevelbuilder/ui-ux-pro-max-skill)
+### 双配置文件（Profile 系统）
 
-| 精华能力 | 当前利用度 | 优化空间 |
-|----------|-----------|---------|
-| `--design-system` 一键设计系统生成 | 中 | 保持 |
-| **`--persist` Master + Page overrides** | **未利用** | **设计持久化跨会话** |
-| Pre-delivery Checklist (4 维度 20+ 项) | 低 | 应纳入闸门 G3 和 G4 |
-| 9 技术栈专属指南 | 低 | 自动识别项目栈后推荐 |
-| 推理规则 (ui-reasoning.csv) | 中 | 保持 |
-| 常见专业 UI 规则 (no emoji/cursor-pointer) | 低 | 纳入审查清单 |
+| Profile | 默认命令 | 说明 |
+|---------|---------|------|
+| **core**（默认） | `propose`, `explore`, `apply`, `archive` | 快速路径 |
+| **expanded** | 上述 + `new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard` | 完整功能 |
 
-## 2. 当前 v1 的 12 个关键缺失
+### 新增命令
 
-| # | 缺失 | 影响 | 涉及项目 |
-|---|------|------|---------|
-| 1 | 无会话恢复 | 长任务中断后丢失上下文 | planning-with-files |
-| 2 | 无复杂度分级 | 简单 bugfix 被迫走完整流程 | OpenSpec `/opsx:ff` |
-| 3 | 无 Read Before Decide | 长上下文中决策偏差 | planning-with-files |
-| 4 | 无两阶段审查 | 代码可能偏离规范却通过审查 | Superpowers |
-| 5 | 无 Subagent-Driven 选项 | 缺少高效执行路径 | Superpowers |
-| 6 | 无 finishing-a-development-branch | 归档不完整 | Superpowers |
-| 7 | 宪法仅被动引用 | 不同阶段可能违反宪法约束 | Spec-Kit |
-| 8 | 无设计系统持久化 | 每次会话重新生成 | ui-ux-pro-max |
-| 9 | 3-Strike 未联动 debugging | 失败处理碎片化 | planning + Superpowers |
-| 10 | 验证证据未写入 progress.md | 完成声明无文件记录 | Superpowers + planning |
-| 11 | 无质量闸门文档 | 闸门标准隐含在流程中 | 所有 |
-| 12 | brainstorming 与 Spec 串行重复 | 浪费上下文和时间 | Superpowers + Spec |
+| 命令 | 说明 | 对本项目影响 |
+|------|------|-------------|
+| **`/opsx:propose`** | 一步创建变更+生成规划工件（替代 `/opsx:new` + `/opsx:ff` 组合） | **核心路径变更** |
+| **`/opsx:explore`** | 探索想法、调查问题、澄清需求（无结构化要求） | **新增——可与 brainstorming 联动** |
+| **`/opsx:verify`** | 验证实现是否匹配工件（Completeness/Correctness/Coherence 三维度） | **新增——应整合到 G4** |
+| **`/opsx:sync`** | 将 delta specs 合并到主 specs | 新增 |
+| **`/opsx:bulk-archive`** | 批量归档多个已完成变更 | 新增 |
+| **`/opsx:onboard`** | 引导式端到端教程 | 新增 |
 
-## 3. 协同优化矩阵 (Cross-Project Synergies)
+### 其他重要更新
 
-```
-          Spec-Kit    OpenSpec    Superpowers    Planning    UI/UX
-Spec-Kit     —        模式互斥     宪法×审查      工件统一     设计×规范
-OpenSpec   模式互斥      —         ff×复杂度     归档×日志     config×设计
-Superpowers 宪法×审查  ff×复杂度      —          错误×恢复     检查清单
-Planning   工件统一    归档×日志    错误×恢复        —         持久化设计
-UI/UX      设计×规范   config×设计  检查清单      持久化设计      —
-```
+- **安装**: `npm install -g @fission-ai/openspec@latest` + `openspec init`
+- **项目配置**: `openspec/config.yaml` (schema, context, rules)
+- **目录结构变更**: `openspec/changes/` (不再是 `.openspec/changes/`)
+- **模型推荐**: "推荐 Opus 4.5 和 GPT 5.2"
+- **多语言支持**: 国际化文档
 
-关键协同链：
-1. **宪法 → 闸门 → 审查**：宪法条款在每个闸门校验，审查时引用宪法
-2. **错误 → 日志 → 调试**：progress.md 记录错误 → 3-Strike → systematic-debugging
-3. **设计 → 持久化 → 恢复**：design-system/MASTER.md → 跨会话持久 → 自动恢复
-4. **规范 → 计划 → 执行**：spec 工件直接转化为 task_plan.md 的编号清单
-5. **验证 → 证据 → 归档**：verification 输出写入 progress.md → 归档
+---
 
-## 4. 来源
+## 3. Superpowers (obra/superpowers) — 显著增强
 
-- Spec-Kit: 已安装 Skill + references/spec-kit-workflow.md
-- OpenSpec: 已安装 Skill + references/openspec-workflow.md
-- Superpowers: using-superpowers + 8 个子 Skill (brainstorming, writing-plans, TDD, etc.)
-- planning-with-files: 已安装 Skill v2.10.0
-- ui-ux-pro-max: 已安装 Skill + scripts/search.py
+### brainstorming 重大升级
+
+| 新特性 | 说明 | 对本项目影响 |
+|--------|------|-------------|
+| **Spec Review Loop** | 写完 spec 后分派 spec-document-reviewer subagent，最多 3 轮迭代 | **新质量关——应整合到 G1** |
+| **Visual Companion** | 基于浏览器的伴侣工具，用于展示 mockup/图表 | 可选增强 |
+| **Scope Check** | 如果需求涉及多个独立子系统，早期标记需要分解 | 重要增强 |
+| **User Review Gate** | 用户必须审阅书面 spec 才能继续 | 强化 G1 |
+| **Design Doc 存储** | `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` | 更新路径 |
+| **HARD-GATE** | 即使"简单"项目也不跳过设计 | 强化哲学 |
+
+### writing-plans 重大升级
+
+| 新特性 | 说明 | 对本项目影响 |
+|--------|------|-------------|
+| **Plan Document Header** | 标准化头部，含必需 sub-skill 引用 | 更新模板 |
+| **File Structure Mapping** | 定义任务前先映射所有文件 | 增强 G2 |
+| **Plan Review Loop** | 分派 plan-document-reviewer subagent，最多 3 轮 | **新质量关——应整合到 G2** |
+| **Execution Handoff** | 明确提供 Subagent-Driven vs Inline 选择 | 更新执行策略 |
+| **Plans 存储** | `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` | 更新路径 |
+| **Scope Check** | 多独立子系统应拆分为独立计划 | 重要增强 |
+
+### subagent-driven-development 重大升级
+
+| 新特性 | 说明 |
+|--------|------|
+| **Model Selection** | 按角色使用最低成本模型（机械任务用 fast，架构用 capable） |
+| **Implementer Status** | DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED 四种状态 |
+| **Prompt Templates** | `implementer-prompt.md`, `spec-reviewer-prompt.md`, `code-quality-reviewer-prompt.md` |
+| **详细流程图** | Graphviz 流程图描述完整流程 |
+| **Red Flags** | 明确列出禁止行为（不跳过审查、不并行实现等） |
+
+### 新增 Skills
+
+| Skill | 说明 |
+|-------|------|
+| `dispatching-parallel-agents` | 并发 subagent 工作流 |
+| `writing-skills` | 创建新 skills（含测试方法论） |
+
+### 安装方式
+
+- **Claude Code**: `/plugin install superpowers@claude-plugins-official`
+- **Cursor**: `/add-plugin superpowers`
+- **Gemini CLI**: `gemini extensions install https://github.com/obra/superpowers`
+
+---
+
+## 4. planning-with-files (OthmanAdi/planning-with-files) — 稳定迭代
+
+- 默认分支为 `master`（非 `main`）
+- 最近推送：2026-03-15
+- 支持多平台：`.cursor/`, `.claude-plugin/`, `.codex/`, `.gemini/` 等
+- 核心功能稳定：三文件体系 + 会话恢复 + 3-Strike + 5-Question Reboot
+- 无重大架构变更
+
+---
+
+## 5. ui-ux-pro-max (nextlevelbuilder/ui-ux-pro-max-skill) — v2.0 发布
+
+### 数量级提升
+
+| 维度 | v1 (项目引用) | v2.0 (官方最新) | 增幅 |
+|------|--------------|----------------|------|
+| UI Styles | 50 | **67** | +34% |
+| Color Palettes | 21 | **161** | +667% |
+| Font Pairings | 50 | **57** | +14% |
+| Chart Types | 20 | **25** | +25% |
+| Tech Stacks | 9 | **13** | +44% |
+| Reasoning Rules | — | **161** | 全新 |
+| UX Guidelines | — | **99** | 全新 |
+
+### 新增 Tech Stacks
+
+Astro, Nuxt.js, Nuxt UI, Jetpack Compose
+
+### v2.0 旗舰功能：智能设计系统生成器
+
+5 路并行搜索：产品类型匹配(161类) → 风格推荐(67种) → 色彩选择(161色) → 着陆页模式(24种) → 排版配对(57组)
+
+### 新增 Style 类别
+
+- Landing Page Styles (8 种)
+- BI/Analytics Dashboard Styles (10 种)
+
+### CLI 工具
+
+`uipro-cli` (npm 包)
+
+---
+
+## 6. 当前项目 v3 与官方最新的差距汇总
+
+| # | 差距 | 影响级别 | 涉及文件 |
+|---|------|---------|---------|
+| 1 | Spec-Kit 缺少 `/speckit.implement`, `/speckit.analyze`, `/speckit.checklist` | 高 | spec-kit-workflow.md |
+| 2 | Spec-Kit 安装方式过时 | 中 | integration-guide.md, install-all.* |
+| 3 | OpenSpec 未反映 `/opsx:propose` 核心路径 + `/opsx:explore` | **高** | openspec-workflow.md |
+| 4 | OpenSpec 缺少 `/opsx:verify` 三维度验证 | 高 | openspec-workflow.md, quality-gates.md |
+| 5 | OpenSpec Profile 系统 (core vs expanded) 未体现 | 中 | openspec-workflow.md |
+| 6 | OpenSpec 目录结构变更 (`openspec/` 替代 `.openspec/`) | **高** | openspec-workflow.md, constitution |
+| 7 | brainstorming Spec Review Loop 未整合到 G1 | 高 | quality-gates.md, SKILL.md |
+| 8 | brainstorming Visual Companion 未提及 | 低 | synergy-patterns.md |
+| 9 | writing-plans Plan Review Loop 未整合到 G2 | 高 | quality-gates.md |
+| 10 | writing-plans File Structure Mapping 未要求 | 中 | quality-gates.md |
+| 11 | subagent-driven-development Model Selection 未引导 | 中 | integration-guide.md |
+| 12 | subagent-driven-development Implementer Status 处理未文档化 | 中 | synergy-patterns.md |
+| 13 | ui-ux-pro-max 数据量过时（50→67 styles, 21→161 palettes 等） | 高 | SKILL.md description, README |
+| 14 | ui-ux-pro-max 新增 Tech Stacks 未列出 | 中 | integration-guide.md |
+| 15 | 安装脚本未反映各工具最新安装方式 | 中 | install-all.sh/ps1 |
+| 16 | Superpowers 安装方式未更新（Plugin Marketplace） | 中 | integration-guide.md |
+| 17 | 协同链缺少新能力整合（verify + review loops） | 高 | synergy-patterns.md |
+
+---
+
+## 7. 来源
+
+- Spec-Kit: https://github.com/github/spec-kit (README + CLI Reference + Extensions/Presets)
+- OpenSpec: https://github.com/Fission-AI/OpenSpec (README + docs/opsx.md + docs/commands.md)
+- Superpowers: https://github.com/obra/superpowers (README + skills/brainstorming/SKILL.md + skills/writing-plans/SKILL.md + skills/subagent-driven-development/SKILL.md)
+- planning-with-files: https://github.com/OthmanAdi/planning-with-files (API metadata)
+- ui-ux-pro-max: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill (README v2.0)
