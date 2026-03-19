@@ -5,19 +5,53 @@
 | Skill | Role | Required? | Phase |
 |-------|------|-----------|-------|
 | `using-superpowers` | Loads Superpowers methodology | Yes | Phase 4 |
-| `brainstorming` | Design exploration (merged into Spec phase) | Yes | Phase 1 |
-| `writing-plans` | Implementation plans (bite-sized steps) | Yes | Phase 2 |
+| `brainstorming` | Design exploration + spec review loop | Yes | Phase 1 |
+| `writing-plans` | Implementation plans + plan review loop | Yes | Phase 2 |
 | `test-driven-development` | TDD RED-GREEN-REFACTOR | Yes | Phase 4 |
-| `requesting-code-review` | Code review | Yes | Phase 4 |
+| `requesting-code-review` | Two-stage code review | Yes | Phase 4 |
 | `verification-before-completion` | Pre-completion verification | Yes | Phase 4 (G4) |
 | `planning-with-files` | File-based planning + session recovery | Yes | Phase 0/2 |
-| `ui-ux-pro-max` | UI/UX design system | Conditional | Phase 3 |
+| `ui-ux-pro-max` | UI/UX design system (v2.0) | Conditional | Phase 3 |
 | `systematic-debugging` | 4-phase root cause analysis | On demand | Phase 4 |
 | `subagent-driven-development` | Subagent execution + two-stage review | On demand | Phase 4 |
 | `executing-plans` | Batch execution + checkpoints | On demand | Phase 4 |
+| `dispatching-parallel-agents` | Concurrent subagent workflows | On demand | Phase 4 |
 | `finishing-a-development-branch` | Branch wrap-up | Yes | Phase 5 |
 
 Missing a required skill? Search and install: `npx skills find '<keyword>'`
+
+## Installation
+
+### Spec-Kit
+
+```bash
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+specify init . --ai cursor
+```
+
+### OpenSpec
+
+```bash
+npm install -g @fission-ai/openspec@latest
+cd your-project && openspec init
+```
+
+### Superpowers
+
+**Cursor**: `/add-plugin superpowers` or search in plugin marketplace.
+
+**Claude Code**: `/plugin install superpowers@claude-plugins-official`
+
+**Gemini CLI**: `gemini extensions install https://github.com/obra/superpowers`
+
+### ui-ux-pro-max
+
+Install via Cursor Skills or `npx skills add`:
+```bash
+npx skills add nextlevelbuilder/ui-ux-pro-max-skill
+```
+
+CLI tool available: `npm install -g uipro-cli`
 
 ## Session Recovery Protocol
 
@@ -31,8 +65,9 @@ When `task_plan.md` exists at session start (meaning there's unfinished work):
    - What did I learn? (key findings from `findings.md`)
    - What did I do? (latest entry in `progress.md`)
 3. **Consistency check**: `git diff --stat` vs. `progress.md` records
-4. **Breakpoint**: Resume from the next unchecked step
-5. **Report to user**: Current state + next step suggestion → confirm before continuing
+4. **Design system check**: If `design-system/` exists → auto-load design context
+5. **Breakpoint**: Resume from the next unchecked step
+6. **Report to user**: Current state + next step suggestion → confirm before continuing
 
 This runs automatically at session start — no user action needed.
 
@@ -63,6 +98,25 @@ Phase 4 offers two strategies. The AI recommends based on task characteristics:
 
 When in doubt → **Subagent-Driven** (default recommendation).
 
+### Model Selection for Subagent Execution
+
+Use the least powerful model that can handle each role to conserve cost:
+
+| Task type | Signal | Model |
+|-----------|--------|-------|
+| Mechanical implementation | 1-2 files, clear spec | Fast/cheap |
+| Integration | Multi-file coordination, pattern matching | Standard |
+| Architecture/design/review | Broad codebase understanding, design judgment | Most capable |
+
+### Implementer Status Handling
+
+| Status | Action |
+|--------|--------|
+| DONE | Proceed to spec compliance review |
+| DONE_WITH_CONCERNS | Read concerns → address if correctness/scope |
+| NEEDS_CONTEXT | Provide missing info, re-dispatch |
+| BLOCKED | Escalate: more context / better model / break down / rethink |
+
 ## Troubleshooting
 
 **Mode seems wrong?**
@@ -80,6 +134,9 @@ Check `task_plan.md` / `progress.md` are up to date. Use "Read Before Decide": r
 **Same error 3 times?**
 The 3-Strike protocol auto-escalates to `systematic-debugging`. If that also fails, the architecture may need rethinking — escalate to the user.
 
+**OpenSpec directory not found?**
+OpenSpec now uses `openspec/` (not `.openspec/`). Run `openspec init` to initialize.
+
 ## Related Projects
 
 | Project | GitHub | Role |
@@ -87,5 +144,5 @@ The 3-Strike protocol auto-escalates to `systematic-debugging`. If that also fai
 | Spec-Kit | [github/spec-kit](https://github.com/github/spec-kit) | GitHub's spec-driven framework |
 | OpenSpec | [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec) | Lightweight OPSX workflow |
 | Superpowers | [obra/superpowers](https://github.com/obra/superpowers) | TDD + review methodology |
-| planning-with-files | [othmanadi/planning-with-files](https://github.com/othmanadi/planning-with-files) | File-based persistent planning |
-| ui-ux-pro-max | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | UI/UX design system |
+| planning-with-files | [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) | File-based persistent planning |
+| ui-ux-pro-max | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | UI/UX design system (v2.0) |

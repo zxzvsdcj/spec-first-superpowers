@@ -1,62 +1,70 @@
-# spec-first-superpowers v3 重构总结
+# spec-first-superpowers v4 升级总结
 
-> 完成日期：2026-03-02
+> 升级日期：2026-03-19
+> 版本：v3 → v4
+> 验证：104/104 测试全部通过
 
-## 项目概述
+## 升级概览
 
-`spec-first-superpowers` 是一个 Cursor Agent Skill，用于编排**规范驱动开发（SDD）**工作流。自动选择 Spec-Kit 或 OpenSpec 模式，协调 planning-with-files、ui-ux-pro-max、Superpowers 等子 Skill 完成从规范到代码的完整闭环。
+本次升级全面适配五项核心工具的官方最新版本，涵盖 **10 个文件的修改**，解决 **17 项差距**。
 
-## v3 核心升级
+## 变更清单
 
-| 特性 | v1 | v3 |
-|------|----|----|
-| 复杂度分级 | 无 | 快速/标准/深度三级自动判断 |
-| 会话恢复 | 无 | 5-Question Reboot Test + 断点续行 |
-| 质量闸门 | 无明确标准 | G0-G4 详细通过条件 |
-| 审查机制 | 单一 code-review | 两阶段：spec 符合 + 代码质量 |
-| 执行策略 | 固定线性 | Subagent-Driven / Executing-Plans 可选 |
-| 错误处理 | 无 | 3-Strike + systematic-debugging 联动 |
-| 设计持久化 | 无 | --persist → MASTER.md 跨会话 |
-| 验证证据 | 无归档 | 写入 progress.md |
-| 协同链 | 独立调用 | 5 条跨项目协同链 |
+### 核心 Skill 文件
 
-## 目录结构
+| 文件 | 变更类型 | 说明 |
+|------|---------|------|
+| `SKILL.md` | 更新 | v4 标题 · description 更新（OPSX, v2.0 数据, 新能力）· 反映所有新特性 |
+| `references/openspec-workflow.md` | **重写** | OPSX 标准化 · `/opsx:propose` + `/opsx:explore` + `/opsx:verify` · Profile 系统 · `openspec/` 目录 · `config.yaml` |
+| `references/spec-kit-workflow.md` | 重写 | `/speckit.implement` + `/speckit.analyze` + `/speckit.checklist` · Extensions & Presets 系统 · `uv tool install` |
+| `references/quality-gates.md` | 重写 | Spec Review Loop (G1) · Plan Review Loop (G2) · `/opsx:verify` (G4) · Implementer Status · 文件结构映射 |
+| `references/synergy-patterns.md` | 重写 | 5 条协同链全面更新：审查循环 · 实现者状态 · v2.0 设计生成 · 范围检查 · 模型选择 · 三维度验证 |
+| `references/integration-guide.md` | 重写 | 安装方式全面更新 · `dispatching-parallel-agents` 新 skill · 模型选择指南 · 实现者状态处理 |
+| `assets/constitutions/openspec-constitution.md` | 更新至 v3.0 | 审查循环条款 · `openspec/config.yaml` · ui-ux-pro-max v2.0 · cursor-pointer/no-emoji 规则 |
+| `assets/constitutions/spec-kit-constitution.md` | 更新至 v3.0 | 审查循环条款 · Extensions/Presets · `/speckit.analyze` · 文件结构映射 |
+
+### 项目配套文件
+
+| 文件 | 变更类型 | 说明 |
+|------|---------|------|
+| `README.md` | 更新 | v4 标识 · 完整新特性列表 · 更新集成项目描述 |
+| `使用说明.md` | 更新 | v4 流程 · 新能力表格 · 新增 FAQ |
+| `test_skill.py` | 增强 | 104 项检查（v3 为 79 项）· 新增 v4 特性验证 · 新增 OpenSpec/Spec-Kit 内容验证 |
+| `findings.md` | 更新 | 完整的五大工具官方更新调研报告 |
+
+## 新增能力对照
+
+| 能力 | 来源 | 整合位置 |
+|------|------|---------|
+| `/opsx:propose` 一步创建 | OpenSpec | openspec-workflow.md, SKILL.md |
+| `/opsx:explore` 探索想法 | OpenSpec | openspec-workflow.md |
+| `/opsx:verify` 三维度验证 | OpenSpec | openspec-workflow.md, quality-gates.md (G4) |
+| Profile 系统 (core/expanded) | OpenSpec | openspec-workflow.md |
+| `openspec/` 目录结构 | OpenSpec | openspec-workflow.md, constitution |
+| `/speckit.implement` 执行 | Spec-Kit | spec-kit-workflow.md |
+| `/speckit.analyze` 一致性分析 | Spec-Kit | spec-kit-workflow.md, quality-gates.md (G1) |
+| `/speckit.checklist` 质量清单 | Spec-Kit | spec-kit-workflow.md |
+| Extensions & Presets 系统 | Spec-Kit | spec-kit-workflow.md, constitution |
+| Spec Review Loop | Superpowers (brainstorming) | quality-gates.md (G1) |
+| Plan Review Loop | Superpowers (writing-plans) | quality-gates.md (G2) |
+| Visual Companion | Superpowers (brainstorming) | synergy-patterns.md |
+| 文件结构映射 | Superpowers (writing-plans) | quality-gates.md (G2), SKILL.md |
+| 范围检查 | Superpowers (brainstorming) | synergy-patterns.md, SKILL.md |
+| 模型选择指南 | Superpowers (subagent) | synergy-patterns.md, integration-guide.md |
+| 实现者状态处理 | Superpowers (subagent) | quality-gates.md, SKILL.md |
+| v2.0 智能设计系统生成 | ui-ux-pro-max | synergy-patterns.md, SKILL.md |
+| 67 styles / 161 palettes / 57 fonts / 13 stacks | ui-ux-pro-max | SKILL.md description, synergy-patterns.md |
+
+## 验证结果
 
 ```
-spec-first-superpowers/                     # 仓库根目录
-├── skills/
-│   └── spec-first-superpowers/             # ← npx skills add 只安装这个目录
-│       ├── SKILL.md                        # 核心编排逻辑 (v3, 87 行)
-│       ├── references/
-│       │   ├── spec-kit-workflow.md        # Spec-Kit 工作流 + 闸门
-│       │   ├── openspec-workflow.md        # OpenSpec 工作流 + 快速路径
-│       │   ├── integration-guide.md        # 集成指南 + 会话恢复 + 错误链
-│       │   ├── quality-gates.md            # G0-G4 质量闸门标准
-│       │   └── synergy-patterns.md         # 5 条协同链
-│       └── assets/
-│           └── constitutions/
-│               ├── openspec-constitution.md # OpenSpec 宪法 v2.0
-│               └── spec-kit-constitution.md # Spec-Kit 宪法 v2.0
-├── .cursor/
-│   └── 00-spec-first-superpowers.mdc       # 守门规则
-├── test_skill.py                           # 验证脚本 (79 项检查)
-├── install-all.sh / install-all.ps1        # 安装脚本
-├── README.md / 使用说明.md / SUMMARY.md
-├── findings.md / task_plan.md              # 开发过程文档
-└── AI 编程三剑客.pdf
-```
-
-## 测试结果
-
-```
-Total: 79  |  Passed: 79  |  Failed: 0
+Total: 104  |  Passed: 104  |  Failed: 0
 >>> ALL TESTS PASSED <<<
 ```
 
-## 使用方式
+## 部署状态
 
-```bash
-npx skills add zxzvsdcj/spec-first-superpowers
-```
-
-安装后在 Cursor 聊天中输入 `/super-spec` 即可激活规范驱动开发工作流。
+- [x] 源码更新完成
+- [x] test_skill.py 104/104 通过
+- [x] 部署到 `~/.cursor/skills/spec-first-superpowers/`
+- [ ] Git commit + push

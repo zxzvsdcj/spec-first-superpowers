@@ -3,17 +3,18 @@ name: spec-first-superpowers
 description: >
   Enforces spec-before-code workflow for AI-driven development. Automatically selects
   Spec-Kit or OpenSpec mode, triages complexity (quick/standard/thorough), recovers
-  session context, and applies quality gates (G0-G4) at every stage.
+  session context, and applies quality gates (G0-G4) with automated review loops at every stage.
   Use this skill whenever the user says "/super-spec", "spec first", "规范先行",
   or starts any feature, bugfix, or refactor — especially in projects with .spec-mode,
-  .specify/, or .openspec/ directories. Even if the user doesn't explicitly ask for
+  .specify/, or openspec/ directories. Even if the user doesn't explicitly ask for
   spec-driven workflow, activate this skill for any non-trivial code change to prevent
   skipping the design phase.
-  Orchestrates: Spec-Kit/OpenSpec + planning-with-files + ui-ux-pro-max + Superpowers
-  (TDD, code review, verification, debugging).
+  Orchestrates: Spec-Kit/OpenSpec (OPSX) + planning-with-files + ui-ux-pro-max (v2.0, 67 styles,
+  161 palettes, 13 stacks) + Superpowers (TDD, code review, verification, debugging,
+  spec/plan review loops, subagent model selection).
 ---
 
-# Spec-First + Superpowers Orchestrator v3
+# Spec-First + Superpowers Orchestrator v4
 
 Stop the AI from jumping straight to code. Every feature, bugfix, and refactor goes through a specification phase first — because unexamined code is expensive code.
 
@@ -36,7 +37,7 @@ Check for existing signals, then fall back to heuristics:
 |--------|------|
 | `.spec-mode` file exists | Use whatever it says |
 | `.specify/` directory | Spec-Kit |
-| `.openspec/` directory | OpenSpec |
+| `openspec/` directory | OpenSpec |
 | Brand new project, < 30 files | Spec-Kit |
 | Everything else | **OpenSpec** (default) |
 
@@ -52,7 +53,7 @@ The AI suggests a level; the user confirms or overrides.
 
 | Level | When | What happens |
 |-------|------|-------------|
-| **Quick** | Single-file bugfix, typo, config | Simplified spec (`/opsx:ff`) → TDD → archive |
+| **Quick** | Single-file bugfix, typo, config | Simplified spec (`/opsx:propose` or `/opsx:ff`) → TDD → archive |
 | **Standard** | Single feature, clear scope | All phases (Phase 3 only if UI) |
 | **Thorough** | Multi-module, architecture decisions | All phases + Agent Teams evaluation |
 
@@ -62,24 +63,24 @@ The AI suggests a level; the user confirms or overrides.
 If `task_plan.md` exists from a previous session, read all planning files, run the 5-Question Reboot Test (Where am I? / Where am I going? / What's the goal? / What did I learn? / What did I do?), then resume from the last checkpoint.
 
 **Phase 1 — Specification**
-Write the spec using the selected mode. Quick tasks use fast-forward; standard/thorough use the full flow. The user must explicitly confirm the spec before moving on.
-**Gate G1**: User confirmed + spec aligns with constitution.
+Write the spec using the selected mode. Quick tasks use `/opsx:propose`; standard/thorough use the full flow with `/opsx:explore` or `/speckit.specify`. The user must explicitly confirm the spec before moving on.
+**Gate G1**: User confirmed + spec aligns with constitution + spec review loop passed + scope check done.
 
 **Phase 2 — Persistent Planning**
-Generate `task_plan.md` (numbered checklist with test points), `findings.md`, and `progress.md` using `planning-with-files` + `writing-plans`.
-**Gate G2**: Every task has file paths + acceptance criteria + test strategy.
+Generate `task_plan.md` (numbered checklist with file structure mapping + test points), `findings.md`, and `progress.md` using `planning-with-files` + `writing-plans`.
+**Gate G2**: Every task has file paths + acceptance criteria + test strategy + plan review loop passed.
 
 **Phase 3 — UI/UX Design** (conditional)
-Triggered only when UI keywords are detected. Invoke `ui-ux-pro-max --design-system --persist` to generate and persist the design system.
+Triggered only when UI keywords are detected. Invoke `ui-ux-pro-max --design-system --persist` to generate and persist the design system (v2.0: 67 styles, 161 palettes, 57 fonts, 13 tech stacks).
 **Gate G3**: Pre-delivery checklist passed + user confirmed design.
 
 **Phase 4 — Implementation**
 Execute via one of two strategies (AI recommends, user picks):
-- **Subagent-Driven**: Fresh subagent per task + two-stage review (spec conformance → code quality)
+- **Subagent-Driven**: Fresh subagent per task + two-stage review (spec conformance → code quality) + model selection per task role + implementer status handling (DONE/DONE_WITH_CONCERNS/NEEDS_CONTEXT/BLOCKED)
 - **Executing-Plans**: Batch execution + checkpoint reviews
 
 TDD throughout. Errors escalate through the 3-Strike protocol → `systematic-debugging`.
-**Gate G4**: All tests pass + review passed + verification evidence written to `progress.md`.
+**Gate G4**: All tests pass + review passed + verification evidence written to `progress.md` + `/opsx:verify` passed (if available).
 
 **Phase 5 — Archive**
 `finishing-a-development-branch` → update all checkboxes → archive spec artifacts → final `progress.md` entry.

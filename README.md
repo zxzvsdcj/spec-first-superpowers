@@ -1,8 +1,8 @@
-# Spec-First + Superpowers v3
+# Spec-First + Superpowers v4
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Cursor Compatible](https://img.shields.io/badge/Cursor-Compatible-brightgreen)](https://cursor.sh)
-[![Default: OpenSpec](https://img.shields.io/badge/Default-OpenSpec-blue)](https://github.com/Fission-AI/OpenSpec)
+[![Default: OpenSpec](https://img.shields.io/badge/Default-OpenSpec_OPSX-blue)](https://github.com/Fission-AI/OpenSpec)
 
 A Cursor Agent Skill that enforces spec-before-code workflow. Prevents the AI from skipping design and jumping straight to implementation.
 
@@ -32,7 +32,7 @@ These should be installed via Cursor Skills marketplace or `npx skills add`:
 
 - `using-superpowers` + sub-skills (brainstorming, writing-plans, TDD, code-review, etc.)
 - `planning-with-files`
-- `ui-ux-pro-max` (recommended)
+- `ui-ux-pro-max` (recommended, v2.0)
 - `finishing-a-development-branch`
 
 Optional helper scripts for external CLI tools:
@@ -66,20 +66,34 @@ In any Cursor chat:
 
 ```
 /super-spec → Mode Selection → Complexity Triage → Session Recovery (auto)
-    → Specification (G1) → Persistent Planning (G2)
-    → UI/UX Design (G3, conditional) → TDD Implementation (G4) → Archive
+    → Specification (G1, with spec review loop)
+    → Persistent Planning (G2, with plan review loop + file structure mapping)
+    → UI/UX Design (G3, conditional, v2.0 intelligent design system)
+    → TDD Implementation (G4, with model selection + implementer status)
+    → Archive
 ```
 
-## What's in v3
+## What's in v4
 
-- **Complexity triage**: Auto-classifies quick/standard/thorough; simple bugfixes take a fast path
-- **Session recovery**: Detects existing `task_plan.md` and resumes from breakpoint
-- **Quality gates G0-G4**: Clear pass criteria at every phase, with constitution verification
-- **Two-stage review**: Spec conformance + code quality
-- **Subagent-driven execution**: Fresh subagent per task, zero context pollution
-- **Error escalation**: 3-Strike Protocol + systematic-debugging integration
-- **Design persistence**: ui-ux-pro-max `--persist` for cross-session reuse
-- **5 synergy chains**: Constitution→Gates→Review / Error→Log→Debug / Design→Persist→Recover / Spec→Plan→Execute / Verify→Evidence→Archive
+- **Updated OpenSpec OPSX workflow**: `/opsx:propose` as default quick path, `/opsx:explore` for ideation, `/opsx:verify` for 3-dimension validation (Completeness × Correctness × Coherence), Profile system (core vs expanded)
+- **Updated Spec-Kit commands**: `/speckit.implement` for execution, `/speckit.analyze` for cross-artifact consistency, `/speckit.checklist` for quality validation, Extensions & Presets system
+- **Automated review loops**: Spec-document-reviewer + plan-document-reviewer subagents (max 3 iterations each) integrated into G1/G2
+- **File structure mapping**: Required before task decomposition (G2 enhancement)
+- **Model selection for subagents**: Cost-optimized per-task model selection (fast → standard → capable)
+- **Implementer status handling**: DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED with clear escalation paths
+- **ui-ux-pro-max v2.0**: 67 UI styles, 161 color palettes, 57 font pairings, 13 tech stacks, 161 reasoning rules, intelligent design system generator
+- **Scope check**: Early detection of overscoped requirements for decomposition
+
+### Carried from v3
+
+- Complexity triage (quick/standard/thorough)
+- Session recovery with 5-Question Reboot Test
+- Quality gates G0-G4 with constitution verification
+- Two-stage review (spec conformance + code quality)
+- Subagent-driven execution with zero context pollution
+- Error escalation: 3-Strike Protocol + systematic-debugging
+- Design persistence: `--persist` for cross-session reuse
+- 5 synergy chains (updated with new capabilities)
 
 ## Project Structure
 
@@ -87,7 +101,7 @@ In any Cursor chat:
 spec-first-superpowers/
 ├── skills/
 │   └── spec-first-superpowers/             # ← npx skills add installs only this
-│       ├── SKILL.md                        # Core orchestration logic (v3)
+│       ├── SKILL.md                        # Core orchestration logic (v4)
 │       ├── references/
 │       │   ├── spec-kit-workflow.md
 │       │   ├── openspec-workflow.md
@@ -111,11 +125,11 @@ spec-first-superpowers/
 
 | Project | GitHub | Role |
 |---------|--------|------|
-| Spec-Kit | [github/spec-kit](https://github.com/github/spec-kit) | GitHub's spec-driven framework |
-| OpenSpec | [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec) | Lightweight OPSX workflow (default) |
-| Superpowers | [obra/superpowers](https://github.com/obra/superpowers) | TDD + review methodology |
-| planning-with-files | [othmanadi/planning-with-files](https://github.com/othmanadi/planning-with-files) | File-based persistent planning |
-| ui-ux-pro-max | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | UI/UX design system |
+| Spec-Kit | [github/spec-kit](https://github.com/github/spec-kit) | GitHub's spec-driven framework (uv tool install) |
+| OpenSpec | [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec) | Lightweight OPSX workflow (default, npm) |
+| Superpowers | [obra/superpowers](https://github.com/obra/superpowers) | TDD + review + subagent methodology |
+| planning-with-files | [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) | File-based persistent planning |
+| ui-ux-pro-max | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | UI/UX design system (v2.0) |
 
 ---
 

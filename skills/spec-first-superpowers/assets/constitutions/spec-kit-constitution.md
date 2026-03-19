@@ -1,9 +1,9 @@
 # [Project Name] Constitution — Spec-Kit Mode
 
-> **Version**: 2.1
+> **Version**: 3.0
 > **Approved**: `[DATE]`
 > **Scope**: All specs, plans, tasks, and code in this project must comply.
-> **Enforcement**: This constitution is actively verified at gates G1–G4. `plan.md` must reference checkpoints.
+> **Enforcement**: This constitution is actively verified at gates G1–G4 (including review loops). `plan.md` must reference checkpoints.
 
 ## 1. Purpose
 
@@ -20,7 +20,7 @@ This constitution defines the project's non-negotiable principles. It's the high
 - Consistent naming
 - Code style enforced (pre-commit hooks)
 - No circular dependencies, clear layering
-- All changes go through code review
+- All changes go through code review (two-stage: spec conformance + code quality)
 
 ### 2.2 Testing <!-- G4 check -->
 
@@ -32,11 +32,13 @@ This constitution defines the project's non-negotiable principles. It's the high
 
 ### 2.3 User Experience <!-- G3 check -->
 
-- Unified design system (Atomic Design)
+- Unified design system (Atomic Design) generated via ui-ux-pro-max v2.0
 - Responsive (mobile-first)
 - WCAG 2.1 AA (ARIA, keyboard nav, contrast ≥ 4.5:1)
 - Consistent interactions (buttons, navigation, loading, error states)
 - i18n support
+- No emojis as icons (use SVG: Heroicons/Lucide)
+- cursor-pointer on all clickable elements
 - Page load < `[YOUR_TARGET, e.g., 3s]`, interaction < `[YOUR_TARGET, e.g., 100ms]`
 
 ### 2.4 Performance <!-- G4 check -->
@@ -54,6 +56,7 @@ This constitution defines the project's non-negotiable principles. It's the high
 - No high-risk dependencies
 - Third-party license audit (MIT/Apache preferred)
 - OWASP Top 10 protections
+- `/speckit.analyze` validates cross-artifact consistency (recommended before implementation)
 
 ## 4. Document Separation <!-- G1 check -->
 
@@ -61,25 +64,42 @@ This constitution defines the project's non-negotiable principles. It's the high
 - `plan.md`: **Engineering perspective** (How) — must reference constitution checkpoints
 - Violating separation = blocker
 
-## 5. Gate ↔ Constitution Mapping
+## 5. Quality Assurance <!-- review loops -->
+
+- Spec review loop: spec-document-reviewer subagent validates before G1 (max 3 iterations)
+- Plan review loop: plan-document-reviewer subagent validates before G2 (max 3 iterations)
+- File structure mapping required before task decomposition
+- `/speckit.checklist` for requirements completeness validation (optional)
+
+## 6. Gate ↔ Constitution Mapping
 
 | Gate | Checks these sections |
 |------|-----------------------|
-| G1 | §3 (Architecture governance), §4 (Doc separation) |
-| G2 | `plan.md` references constitution checkpoints? |
+| G1 | §3 (Architecture governance), §4 (Doc separation) + spec review loop |
+| G2 | `plan.md` references constitution checkpoints? + plan review loop |
 | G3 | §2.3 (User experience) |
 | G4 | §2.1 (Code quality), §2.2 (Testing), §2.4 (Performance) |
 
-## 6. Amendments
+## 7. Extensions & Presets
+
+- Extensions add new capabilities beyond Spec-Kit core: `specify extension add <name>`
+- Presets customize existing workflows: `specify preset add <name>`
+- Priority: Project-Local Overrides > Presets > Extensions > Core
+
+## 8. Amendments
 
 - Record version history + rationale for each change
 - After amendment, AI self-checks whether existing spec/plan still complies
 - Review quarterly or at major technical shifts
 
-## 7. Quick Self-Check
+## 9. Quick Self-Check
 
 - [ ] `spec.md` is pure product perspective, no technical details?
+- [ ] Spec review loop passed (subagent)?
 - [ ] `plan.md` references constitution checkpoints?
+- [ ] Plan review loop passed (subagent)?
+- [ ] File structure mapped before task decomposition?
+- [ ] `/speckit.analyze` passed (if run)?
 - [ ] Code passes linter + tests + coverage ≥ `[YOUR_TARGET]`?
 - [ ] UI changes pass design system consistency + accessibility checks?
 - [ ] Performance benchmarked before and after?

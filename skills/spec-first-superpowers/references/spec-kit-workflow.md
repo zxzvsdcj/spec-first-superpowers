@@ -4,9 +4,30 @@ Spec-Kit is GitHub's spec-driven development framework. Best for brand-new proje
 
 ## When to Use
 
-- Building from scratch
+- Building from scratch (greenfield)
 - Large systems (multi-module, multi-team)
 - Enterprise projects requiring strict phase control
+- Projects needing extensions or presets for customization
+
+## Installation
+
+```bash
+# Persistent installation (recommended)
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+
+# Initialize in existing project
+specify init . --ai cursor
+# or
+specify init --here --ai cursor
+
+# Upgrade
+uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git
+
+# Check installed tools
+specify check
+```
+
+Also supports: `--ai claude`, `--ai copilot`, `--ai gemini`, `--ai windsurf`, `--ai codex`, `--ai kiro-cli`, and [20+ more agents](https://github.com/github/spec-kit#-supported-ai-agents).
 
 ## Command Flow
 
@@ -30,8 +51,7 @@ Generate `.specify/specs/[feature-name]/spec.md`:
 - Review ambiguities in `spec.md` one by one
 - Confirm with user in rounds (one question at a time)
 - Ensure all acceptance criteria are measurable and unambiguous
-
-Skippable at Quick complexity level.
+- Skippable at Quick complexity level
 
 ### 4. Plan: `/speckit.plan`
 
@@ -48,9 +68,27 @@ Generate `.specify/specs/[feature-name]/tasks.md`:
 - Maps to architecture modules in `plan.md`
 - Synced with `task_plan.md` (tasks.md describes; task_plan.md tracks status)
 
-### 6. Gate G1
+### 6. Analyze: `/speckit.analyze` (optional, recommended)
 
-All three artifacts must be explicitly confirmed by the user before proceeding.
+Cross-artifact consistency and coverage analysis. Run after `/speckit.tasks`, before `/speckit.implement`:
+- Validates spec ↔ plan ↔ tasks alignment
+- Catches missing coverage, contradictions, ambiguities
+- Surfaces gaps before implementation begins
+
+### 7. Checklist: `/speckit.checklist` (optional)
+
+Generate custom quality checklists that validate requirements completeness, clarity, and consistency — described as "unit tests for English". Useful for complex specs.
+
+### 8. Implement: `/speckit.implement`
+
+Execute all tasks and build the feature according to the plan:
+- Works through tasks sequentially
+- Follows TDD patterns
+- Commits incrementally
+
+### 9. Gate G1
+
+All artifacts must be explicitly confirmed by the user before proceeding to implementation.
 
 Checklist:
 - [ ] User gave explicit confirmation
@@ -59,6 +97,38 @@ Checklist:
 - [ ] Each acceptance criterion maps to test cases
 - [ ] `specify check` returns no errors
 - [ ] Spec doesn't violate any constitution clause
+- [ ] `/speckit.analyze` passes (if run)
+
+## Extensions & Presets
+
+Spec-Kit supports workflow customization through two systems:
+
+### Extensions — Add New Capabilities
+
+Add functionality beyond Spec-Kit's core (new commands, templates, integrations).
+
+```bash
+specify extension search
+specify extension add <extension-name>
+```
+
+### Presets — Customize Existing Workflows
+
+Override templates and commands to match your methodology (Agile, Kanban, DDD, etc.).
+
+```bash
+specify preset search
+specify preset add <preset-name>
+```
+
+### Priority Resolution
+
+```
+Project-Local Overrides (.specify/templates/overrides/)  ← highest
+Presets (.specify/presets/<id>/templates/)
+Extensions (.specify/extensions/<id>/templates/)
+Spec Kit Core (.specify/templates/)                      ← lowest
+```
 
 ## File Structure
 
@@ -66,16 +136,22 @@ Checklist:
 .specify/
 ├── memory/
 │   └── constitution.md
-└── specs/
-    └── [feature-name]/
-        ├── spec.md     # Product spec (What & Why)
-        ├── plan.md     # Technical plan (How, refs constitution)
-        └── tasks.md    # Task list (synced with task_plan.md)
+├── specs/
+│   └── [feature-name]/
+│       ├── spec.md     # Product spec (What & Why)
+│       ├── plan.md     # Technical plan (How, refs constitution)
+│       └── tasks.md    # Task list (synced with task_plan.md)
+├── templates/
+│   └── overrides/      # Project-local template overrides
+├── extensions/         # Installed extensions
+└── presets/            # Installed presets
 ```
 
 ## CLI Commands
 
-```bash
-specify init    # Initialize .specify/ directory
-specify check   # Validate spec completeness (integrated into G1)
-```
+| Command | Description |
+|---------|-------------|
+| `specify init` | Initialize `.specify/` directory |
+| `specify check` | Validate spec completeness (integrated into G1) |
+| `specify extension search/add` | Manage extensions |
+| `specify preset search/add` | Manage presets |
