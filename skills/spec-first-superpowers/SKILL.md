@@ -28,6 +28,7 @@ Stop the AI from jumping straight to code. Every feature, bugfix, and refactor g
 | `/super-spec force-spec-kit` | Force Spec-Kit mode |
 | `/super-spec force-openspec` | Force OpenSpec mode |
 | `/super-spec reset` | Reset mode selection |
+| `/super-spec upgrade` | Check all integrated projects for updates and execute upgrade |
 
 ## How It Works
 
@@ -107,5 +108,6 @@ Read these as needed — they contain detailed procedures that would bloat this 
 | [references/spec-kit-workflow.md](references/spec-kit-workflow.md) | Running the Spec-Kit flow |
 | [references/openspec-workflow.md](references/openspec-workflow.md) | Running the OpenSpec flow |
 | [references/mempalace-integration.md](references/mempalace-integration.md) | MemPalace memory system setup + 5 integration points |
+| [references/upgrade-protocol.md](references/upgrade-protocol.md) | `/super-spec upgrade` — standardized version sync procedure |
 | [assets/constitutions/openspec-constitution.md](assets/constitutions/openspec-constitution.md) | OpenSpec constitution template |
 | [assets/constitutions/spec-kit-constitution.md](assets/constitutions/spec-kit-constitution.md) | Spec-Kit constitution template |

@@ -53,6 +53,7 @@ for rf in [
     "quality-gates.md",
     "synergy-patterns.md",
     "mempalace-integration.md",
+    "upgrade-protocol.md",
 ]:
     path = os.path.join(ref_dir, rf)
     exists = os.path.isfile(path)
@@ -120,6 +121,8 @@ check("has scope check", "scope check" in content.lower() or "scope" in content.
 check("has /opsx:propose reference", "/opsx:propose" in content or "opsx:propose" in content)
 check("has MemPalace mention", "mempalace" in content.lower() or "MemPalace" in content)
 check("has mempalace-integration.md reference", "mempalace-integration.md" in content)
+check("has upgrade-protocol.md reference", "upgrade-protocol.md" in content)
+check("has /super-spec upgrade command", "/super-spec upgrade" in content)
 check("has v5 in title", "v5" in content.lower())
 check("has 6 synergy chains", "6 chain" in content.lower() or "6 chains" in content.lower())
 check("has knowledge graph mention", "knowledge graph" in content.lower())
@@ -244,6 +247,22 @@ if os.path.isfile(mp_path):
     check("mempalace has session recovery", "session recovery" in mp_content.lower())
     check("mempalace has cross-project", "cross-project" in mp_content.lower())
     check("mempalace has tool reference", "mempalace_search" in mp_content or "mempalace_status" in mp_content)
+
+# 15b. Upgrade protocol file content
+up_path = os.path.join(ref_dir, "upgrade-protocol.md")
+if os.path.isfile(up_path):
+    with open(up_path, "r", encoding="utf-8") as f:
+        up_content = f.read()
+    check("upgrade-protocol has project registry table", "Integrated Projects Registry" in up_content)
+    check("upgrade-protocol has 6 projects", "Spec-Kit" in up_content and "OpenSpec" in up_content and "Superpowers" in up_content and "MemPalace" in up_content)
+    check("upgrade-protocol has reconnaissance phase", "Reconnaissance" in up_content or "Phase 1" in up_content)
+    check("upgrade-protocol has impact analysis phase", "Impact Analysis" in up_content or "Phase 2" in up_content)
+    check("upgrade-protocol has decision gate", "Decision Gate" in up_content or "Phase 3" in up_content)
+    check("upgrade-protocol has implementation phase", "Phase 4" in up_content or "Implementation" in up_content)
+    check("upgrade-protocol has verification phase", "Verification" in up_content or "Phase 5" in up_content)
+    check("upgrade-protocol has breaking-change-first rule", "breaking" in up_content.lower())
+    check("upgrade-protocol has history table", "History" in up_content)
+    check("upgrade-protocol has version-pin rule", "version-pin" in up_content.lower() or "Version-pin" in up_content)
 
 # 16. Constitution files v4.0 content
 for const_name, const_file in [

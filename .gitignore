@@ -1,0 +1,15 @@
+# Deployment artifacts (literal %USERPROFILE% from unexpanded env vars)
+%USERPROFILE%/
+
+# Planning files (session-specific, not part of the skill distribution)
+task_plan.md
+findings.md
+progress.md
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db

@@ -65,6 +65,7 @@ In any Cursor chat:
 | `/super-spec force-spec-kit` | Force Spec-Kit mode |
 | `/super-spec force-openspec` | Force OpenSpec mode |
 | `/super-spec reset` | Reset mode selection |
+| `/super-spec upgrade` | Check all integrated projects for updates and execute upgrade |
 
 ## How It Works
 
@@ -115,7 +116,8 @@ spec-first-superpowers/
 │       │   ├── integration-guide.md
 │       │   ├── quality-gates.md
 │       │   ├── synergy-patterns.md
-│       │   └── mempalace-integration.md    # NEW in v5
+│       │   ├── mempalace-integration.md    # NEW in v5
+│       │   └── upgrade-protocol.md        # NEW in v5 — /super-spec upgrade
 │       └── assets/
 │           └── constitutions/
 │               ├── openspec-constitution.md
