@@ -5,13 +5,13 @@
 | Skill | Role | Required? | Phase |
 |-------|------|-----------|-------|
 | `using-superpowers` | Loads Superpowers methodology | Yes | Phase 4 |
-| `brainstorming` | Design exploration + spec review loop | Yes | Phase 1 |
-| `writing-plans` | Implementation plans + plan review loop | Yes | Phase 2 |
+| `brainstorming` | Design exploration + inline spec review | Yes | Phase 1 |
+| `writing-plans` | Implementation plans + inline plan review | Yes | Phase 2 |
 | `test-driven-development` | TDD RED-GREEN-REFACTOR | Yes | Phase 4 |
 | `requesting-code-review` | Two-stage code review | Yes | Phase 4 |
 | `verification-before-completion` | Pre-completion verification | Yes | Phase 4 (G4) |
 | `planning-with-files` | File-based planning + session recovery | Yes | Phase 0/2 |
-| `ui-ux-pro-max` | UI/UX design system (v2.0) | Conditional | Phase 3 |
+| `ui-ux-pro-max` | UI/UX design system (v2.5.0) | Conditional | Phase 3 |
 | `systematic-debugging` | 4-phase root cause analysis | On demand | Phase 4 |
 | `subagent-driven-development` | Subagent execution + two-stage review | On demand | Phase 4 |
 | `executing-plans` | Batch execution + checkpoints | On demand | Phase 4 |
@@ -20,23 +20,31 @@
 
 Missing a required skill? Search and install: `npx skills find '<keyword>'`
 
+## External Tools
+
+| Tool | Role | Required? |
+|------|------|-----------|
+| MemPalace | Cross-session memory + knowledge graph | Optional (recommended) |
+
 ## Installation
 
-### Spec-Kit
+### Spec-Kit (v0.7.1+)
 
 ```bash
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-specify init . --ai cursor
+specify init . --integration cursor
 ```
 
-### OpenSpec
+> Note: `--ai` flag is deprecated. Use `--integration` instead.
+
+### OpenSpec (v1.2.0+)
 
 ```bash
 npm install -g @fission-ai/openspec@latest
 cd your-project && openspec init
 ```
 
-### Superpowers
+### Superpowers (v5.0.7+)
 
 **Cursor**: `/add-plugin superpowers` or search in plugin marketplace.
 
@@ -44,7 +52,7 @@ cd your-project && openspec init
 
 **Gemini CLI**: `gemini extensions install https://github.com/obra/superpowers`
 
-### ui-ux-pro-max
+### ui-ux-pro-max (v2.5.0+)
 
 Install via Cursor Skills or `npx skills add`:
 ```bash
@@ -53,21 +61,34 @@ npx skills add nextlevelbuilder/ui-ux-pro-max-skill
 
 CLI tool available: `npm install -g uipro-cli`
 
+### MemPalace (v3.3.0+, optional)
+
+```bash
+pip install mempalace
+mempalace init ~/projects/your-project
+```
+
+Cursor MCP setup: see [references/mempalace-integration.md](mempalace-integration.md)
+
 ## Session Recovery Protocol
 
 When `task_plan.md` exists at session start (meaning there's unfinished work):
 
 1. **Read all planning files**: `task_plan.md` + `findings.md` + `progress.md`
-2. **5-Question Reboot Test**:
+2. **MemPalace context** (if configured):
+   - `mempalace_status` → palace overview
+   - `mempalace_search("project-name decisions")` → relevant history
+   - `mempalace_diary_read(agent="spec-orchestrator")` → last workflow state
+3. **5-Question Reboot Test**:
    - What phase am I in? (last `[x]` in `task_plan.md`)
    - What's next? (next `[ ]`)
    - What's the goal? (goal statement at top of `task_plan.md`)
    - What did I learn? (key findings from `findings.md`)
    - What did I do? (latest entry in `progress.md`)
-3. **Consistency check**: `git diff --stat` vs. `progress.md` records
-4. **Design system check**: If `design-system/` exists → auto-load design context
-5. **Breakpoint**: Resume from the next unchecked step
-6. **Report to user**: Current state + next step suggestion → confirm before continuing
+4. **Consistency check**: `git diff --stat` vs. `progress.md` records
+5. **Design system check**: If `design-system/` exists → auto-load design context
+6. **Breakpoint**: Resume from the next unchecked step
+7. **Report to user**: Current state + next step suggestion → confirm before continuing
 
 This runs automatically at session start — no user action needed.
 
@@ -129,7 +150,7 @@ Check that `.cursor/rules/00-spec-first-superpowers.mdc` exists and has `alwaysA
 Include UI keywords in your request: UI, UX, page, dashboard, component, interaction, interface, design, app, web, mobile.
 
 **Context drifting in long sessions?**
-Check `task_plan.md` / `progress.md` are up to date. Use "Read Before Decide": re-read `task_plan.md` before any major decision.
+Check `task_plan.md` / `progress.md` are up to date. Use "Read Before Decide": re-read `task_plan.md` before any major decision. Consider enabling MemPalace for persistent memory.
 
 **Same error 3 times?**
 The 3-Strike protocol auto-escalates to `systematic-debugging`. If that also fails, the architecture may need rethinking — escalate to the user.
@@ -137,12 +158,16 @@ The 3-Strike protocol auto-escalates to `systematic-debugging`. If that also fai
 **OpenSpec directory not found?**
 OpenSpec now uses `openspec/` (not `.openspec/`). Run `openspec init` to initialize.
 
+**OpenSpec profile confusion?**
+"expanded" was renamed to "custom" in v1.2.0. Run `openspec config profile` to see current options.
+
 ## Related Projects
 
-| Project | GitHub | Role |
-|---------|--------|------|
-| Spec-Kit | [github/spec-kit](https://github.com/github/spec-kit) | GitHub's spec-driven framework |
-| OpenSpec | [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec) | Lightweight OPSX workflow |
-| Superpowers | [obra/superpowers](https://github.com/obra/superpowers) | TDD + review methodology |
-| planning-with-files | [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) | File-based persistent planning |
-| ui-ux-pro-max | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | UI/UX design system (v2.0) |
+| Project | GitHub | Version | Role |
+|---------|--------|---------|------|
+| Spec-Kit | [github/spec-kit](https://github.com/github/spec-kit) | v0.7.1 | GitHub's spec-driven framework |
+| OpenSpec | [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec) | v1.2.0 | Lightweight OPSX workflow |
+| Superpowers | [obra/superpowers](https://github.com/obra/superpowers) | v5.0.7 | TDD + inline review methodology |
+| planning-with-files | [OthmanAdi/planning-with-files](https://github.com/OthmanAdi/planning-with-files) | v2.30.0 | File-based persistent planning |
+| ui-ux-pro-max | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | v2.5.0 | UI/UX design system |
+| MemPalace | [MemPalace/mempalace](https://github.com/MemPalace/mempalace) | v3.3.0 | Cross-session memory + knowledge graph |

@@ -17,7 +17,9 @@ OpenSpec offers two workflow profiles. Configure with `openspec config profile`,
 | Profile | Commands | Best for |
 |---------|----------|----------|
 | **core** (default) | `propose`, `explore`, `apply`, `archive` | Quick, streamlined workflow |
-| **expanded** | Above + `new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard` | Full control, large changes |
+| **custom** | Above + `new`, `continue`, `ff`, `refine`, `verify`, `sync`, `bulk-archive`, `onboard` | Full control, large changes |
+
+> Note: The "expanded" profile was renamed to "custom" in v1.2.0. Both terms may appear in older documentation.
 
 ## Command Flow
 
@@ -42,21 +44,29 @@ Implement tasks from the change. Works through the task list, writing code and c
 
 Move completed change to `openspec/changes/archive/YYYY-MM-DD-<name>/`. Offers to sync delta specs if needed. Preserves all artifacts for audit trail.
 
-### Expanded Profile (Additional Commands)
+### Custom Profile (Additional Commands)
 
 | Command | Purpose |
 |---------|---------|
 | `/opsx:new [name]` | Start a new change scaffold only |
 | `/opsx:continue [name]` | Create next artifact one at a time |
 | `/opsx:ff [name]` | Fast-forward: create all planning artifacts at once |
+| `/opsx:refine [name]` | Review and refine existing artifacts with targeted feedback |
 | `/opsx:verify [name]` | Validate implementation matches artifacts (3 dimensions) |
 | `/opsx:sync [name]` | Merge delta specs into main specs |
 | `/opsx:bulk-archive` | Archive multiple completed changes |
 | `/opsx:onboard` | Guided tutorial through complete workflow |
 
+### `/opsx:refine` — Artifact Review (new)
+
+Enables targeted review and refinement of existing spec artifacts:
+- Accepts feedback on specific sections or dimensions
+- Supports sub-agent spec discovery for proposals
+- Useful when specs need iteration after initial `/opsx:propose`
+
 ### `/opsx:verify` — Three-Dimension Validation
 
-When available (expanded profile), this command validates implementation quality:
+When available (custom profile), this command validates implementation quality:
 
 | Dimension | What it validates |
 |-----------|-------------------|
@@ -75,7 +85,7 @@ Regardless of command path, pass this before moving to implementation:
 - [ ] `design.md` decisions don't violate constitution
 - [ ] Each acceptance criterion maps to test cases
 - [ ] `tasks.md` synced with `task_plan.md`
-- [ ] Spec review loop passed (brainstorming skill, if applicable)
+- [ ] Inline spec review passed (brainstorming skill)
 
 ## Constitution Integration
 
@@ -130,7 +140,9 @@ cd your-project
 openspec init
 ```
 
-To enable expanded workflow: `openspec config profile` → select workflows → `openspec update`.
+To enable custom workflow: `openspec config profile` → select workflows → `openspec update`.
+
+Supports: Cursor, Claude Code, Gemini CLI, Codex, Windsurf, Kiro, Pi, and [more](https://github.com/Fission-AI/OpenSpec#supported-tools).
 
 ## OpenSpec vs. Spec-Kit
 
@@ -142,6 +154,6 @@ To enable expanded workflow: `openspec config profile` → select workflows → 
 | Constitution | Optional (config.yaml) | Required (constitution.md) |
 | Artifacts | proposal → specs → design → tasks | spec → plan → tasks |
 | Quick path | `/opsx:propose` one-shot | `/speckit.implement` after full flow |
-| Verification | `/opsx:verify` (expanded) | `/speckit.analyze` + `/speckit.checklist` |
+| Verification | `/opsx:verify` + `/opsx:refine` (custom) | `/speckit.analyze` + `/speckit.checklist` |
 | Archiving | `/opsx:archive` / `/opsx:bulk-archive` | Manual |
-| Customization | Schema-driven, per-artifact rules | Extensions & Presets |
+| Customization | Schema-driven, per-artifact rules | Extensions, Presets & Workflow Engine |

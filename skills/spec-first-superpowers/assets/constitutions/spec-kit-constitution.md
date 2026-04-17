@@ -1,9 +1,9 @@
 # [Project Name] Constitution — Spec-Kit Mode
 
-> **Version**: 3.0
+> **Version**: 4.0
 > **Approved**: `[DATE]`
 > **Scope**: All specs, plans, tasks, and code in this project must comply.
-> **Enforcement**: This constitution is actively verified at gates G1–G4 (including review loops). `plan.md` must reference checkpoints.
+> **Enforcement**: This constitution is actively verified at gates G1–G4 (including inline self-review). `plan.md` must reference checkpoints.
 
 ## 1. Purpose
 
@@ -32,7 +32,7 @@ This constitution defines the project's non-negotiable principles. It's the high
 
 ### 2.3 User Experience <!-- G3 check -->
 
-- Unified design system (Atomic Design) generated via ui-ux-pro-max v2.0
+- Unified design system (Atomic Design) generated via ui-ux-pro-max v2.5.0
 - Responsive (mobile-first)
 - WCAG 2.1 AA (ARIA, keyboard nav, contrast ≥ 4.5:1)
 - Consistent interactions (buttons, navigation, loading, error states)
@@ -64,10 +64,10 @@ This constitution defines the project's non-negotiable principles. It's the high
 - `plan.md`: **Engineering perspective** (How) — must reference constitution checkpoints
 - Violating separation = blocker
 
-## 5. Quality Assurance <!-- review loops -->
+## 5. Quality Assurance <!-- inline review -->
 
-- Spec review loop: spec-document-reviewer subagent validates before G1 (max 3 iterations)
-- Plan review loop: plan-document-reviewer subagent validates before G2 (max 3 iterations)
+- Inline spec review: self-review checklist validates before G1 (~30s per pass)
+- Inline plan review: self-review checklist validates before G2 (~30s per pass)
 - File structure mapping required before task decomposition
 - `/speckit.checklist` for requirements completeness validation (optional)
 
@@ -75,32 +75,41 @@ This constitution defines the project's non-negotiable principles. It's the high
 
 | Gate | Checks these sections |
 |------|-----------------------|
-| G1 | §3 (Architecture governance), §4 (Doc separation) + spec review loop |
-| G2 | `plan.md` references constitution checkpoints? + plan review loop |
+| G1 | §3 (Architecture governance), §4 (Doc separation) + inline spec review |
+| G2 | `plan.md` references constitution checkpoints? + inline plan review |
 | G3 | §2.3 (User experience) |
 | G4 | §2.1 (Code quality), §2.2 (Testing), §2.4 (Performance) |
 
-## 7. Extensions & Presets
+## 7. Extensions, Presets & Workflow Engine
 
 - Extensions add new capabilities beyond Spec-Kit core: `specify extension add <name>`
 - Presets customize existing workflows: `specify preset add <name>`
+- Workflow Engine (v0.7.0+): Custom workflows via Catalog system: `specify catalog add <name>`
 - Priority: Project-Local Overrides > Presets > Extensions > Core
 
-## 8. Amendments
+## 8. Memory Persistence <!-- MemPalace integration -->
+
+- Architecture decisions recorded in MemPalace Knowledge Graph (if configured)
+- Spec content stored as verbatim drawers for cross-session retrieval
+- Workflow state tracked via Agent Diary
+- Historical patterns queried before new specs (cross-project learning)
+
+## 9. Amendments
 
 - Record version history + rationale for each change
 - After amendment, AI self-checks whether existing spec/plan still complies
 - Review quarterly or at major technical shifts
 
-## 9. Quick Self-Check
+## 10. Quick Self-Check
 
 - [ ] `spec.md` is pure product perspective, no technical details?
-- [ ] Spec review loop passed (subagent)?
+- [ ] Inline spec review checklist passed?
 - [ ] `plan.md` references constitution checkpoints?
-- [ ] Plan review loop passed (subagent)?
+- [ ] Inline plan review checklist passed?
 - [ ] File structure mapped before task decomposition?
 - [ ] `/speckit.analyze` passed (if run)?
 - [ ] Code passes linter + tests + coverage ≥ `[YOUR_TARGET]`?
 - [ ] UI changes pass design system consistency + accessibility checks?
 - [ ] Performance benchmarked before and after?
 - [ ] Verification evidence written to `progress.md`?
+- [ ] Key decisions persisted to MemPalace (if configured)?

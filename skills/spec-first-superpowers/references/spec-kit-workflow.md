@@ -7,7 +7,7 @@ Spec-Kit is GitHub's spec-driven development framework. Best for brand-new proje
 - Building from scratch (greenfield)
 - Large systems (multi-module, multi-team)
 - Enterprise projects requiring strict phase control
-- Projects needing extensions or presets for customization
+- Projects needing extensions, presets, or custom workflows
 
 ## Installation
 
@@ -16,9 +16,9 @@ Spec-Kit is GitHub's spec-driven development framework. Best for brand-new proje
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
 
 # Initialize in existing project
-specify init . --ai cursor
+specify init . --integration cursor
 # or
-specify init --here --ai cursor
+specify init --here --integration cursor
 
 # Upgrade
 uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git
@@ -27,7 +27,9 @@ uv tool install specify-cli --force --from git+https://github.com/github/spec-ki
 specify check
 ```
 
-Also supports: `--ai claude`, `--ai copilot`, `--ai gemini`, `--ai windsurf`, `--ai codex`, `--ai kiro-cli`, and [20+ more agents](https://github.com/github/spec-kit#-supported-ai-agents).
+Also supports: `--integration claude`, `--integration copilot`, `--integration gemini`, `--integration windsurf`, `--integration codex`, `--integration kiro-cli`, `--integration goose`, and [20+ more agents](https://github.com/github/spec-kit#-supported-ai-agents).
+
+> Note: The `--ai` flag is deprecated as of v0.7.1. Use `--integration` instead.
 
 ## Command Flow
 
@@ -99,6 +101,22 @@ Checklist:
 - [ ] Spec doesn't violate any constitution clause
 - [ ] `/speckit.analyze` passes (if run)
 
+## Workflow Engine & Catalog (v0.7.0+)
+
+Spec-Kit v0.7.0 introduced a Workflow Engine with a Catalog system, enabling custom workflow registration and discovery.
+
+### Catalog System
+
+```bash
+# Browse available workflows
+specify catalog list
+
+# Install a workflow from the catalog
+specify catalog add <workflow-name>
+```
+
+Workflows registered in the community catalog can be discovered and composed with Spec-Kit's core commands, enabling project-specific execution patterns (e.g., `architect-preview`).
+
 ## Extensions & Presets
 
 Spec-Kit supports workflow customization through two systems:
@@ -155,3 +173,4 @@ Spec Kit Core (.specify/templates/)                      ← lowest
 | `specify check` | Validate spec completeness (integrated into G1) |
 | `specify extension search/add` | Manage extensions |
 | `specify preset search/add` | Manage presets |
+| `specify catalog list/add` | Browse and install community workflows |

@@ -1,8 +1,8 @@
 # Project Constitution — OpenSpec Mode
 
-> **Version**: 3.0
+> **Version**: 4.0
 > **Scope**: All AI-generated specs, designs, tasks, and code in this project must comply.
-> **Enforcement**: This constitution is actively verified at gates G1–G4 (including review loops).
+> **Enforcement**: This constitution is actively verified at gates G1–G4 (including inline self-review).
 
 ## 1. Core Mission
 
@@ -15,7 +15,7 @@ Iron rules:
 4. UI/UX tasks require a design system approved by the user before implementation.
 5. All implementation follows TDD-First (write tests before code).
 6. Code review is mandatory (two-stage: spec conformance + code quality).
-7. Spec and plan review loops must pass before proceeding (max 3 iterations each).
+7. Inline self-review checklists must pass before proceeding at G1/G2.
 
 ## 2. Code Quality <!-- G4 check -->
 
@@ -37,7 +37,7 @@ Iron rules:
 
 ## 4. UI/UX Consistency <!-- G3 check -->
 
-- Unified design system (Atomic Design) generated via ui-ux-pro-max v2.0
+- Unified design system (Atomic Design) generated via ui-ux-pro-max v2.5.0
 - Responsive-first (mobile-first)
 - WCAG 2.1 AA (contrast ≥ 4.5:1, keyboard navigation, ARIA)
 - Consistent interactions (buttons, navigation, feedback patterns)
@@ -84,24 +84,32 @@ rules:
     - [Your design rules]
 ```
 
-## 9. Gate ↔ Constitution Mapping
+## 9. Memory Persistence <!-- MemPalace integration -->
+
+- Spec decisions recorded in MemPalace Knowledge Graph (if configured)
+- Key findings persisted as verbatim drawers
+- Workflow state tracked via Agent Diary
+- Historical decisions queried before new specs (cross-project learning)
+
+## 10. Gate ↔ Constitution Mapping
 
 | Gate | Checks these sections |
 |------|-----------------------|
-| G1 | §1 (Mission), §6 (Doc separation) + spec review loop |
-| G2 | §7 (File persistence) + plan review loop |
+| G1 | §1 (Mission), §6 (Doc separation) + inline spec review |
+| G2 | §7 (File persistence) + inline plan review |
 | G3 | §4 (UI/UX) |
 | G4 | §2 (Code quality), §3 (Testing), §5 (Performance & security) |
 
-## 10. Quick Self-Check
+## 11. Quick Self-Check
 
 - [ ] SDD spec completed and user confirmed?
-- [ ] Spec review loop passed (subagent)?
+- [ ] Inline spec review checklist passed?
 - [ ] `task_plan.md` generated with file structure mapping?
-- [ ] Plan review loop passed (subagent)?
+- [ ] Inline plan review checklist passed?
 - [ ] UI task has design system generated and confirmed?
 - [ ] TDD: tests written first?
 - [ ] Code passes linter + tests?
 - [ ] Two-stage review (spec + quality) passed?
 - [ ] Verification evidence written to `progress.md`?
-- [ ] `/opsx:verify` passed (if expanded profile)?
+- [ ] `/opsx:verify` passed (if custom profile)?
+- [ ] Key decisions persisted to MemPalace (if configured)?

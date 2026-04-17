@@ -16,6 +16,7 @@ Triggered when `task_plan.md` already exists (meaning there's unfinished work).
 | Breakpoint located | Found last `[x]` in `task_plan.md`; next `[ ]` is the resume point |
 | Context consistent | `git diff --stat` matches what `progress.md` reports |
 | Design system check | If `design-system/` exists → auto-load design context |
+| MemPalace check | If MemPalace is configured → `mempalace_status` + `mempalace_diary_read` for agent state + `mempalace_search` for relevant history |
 
 **If it fails**: Fill in missing files → align state manually → re-evaluate.
 
@@ -33,12 +34,12 @@ Between Phase 1 (Specification) and Phase 2 (Planning).
 | Constitution aligned | Spec content doesn't violate any constitution clause | §2 Core principles |
 | Testable acceptance criteria | Each criterion maps to at least one test case | §2.2/§3 Testing |
 | Scope check passed | If multiple independent subsystems detected, flagged for decomposition | brainstorming |
-| Spec review loop passed | Spec-document-reviewer subagent approved (max 3 iterations) | Superpowers |
+| Inline spec review passed | Self-review checklist completed (see below) | Superpowers |
 | User reviewed written spec | User explicitly reviewed the spec document file | brainstorming |
 
 Spec-Kit extras: `specify check` returns no errors · `/speckit.analyze` passes (if run).
 
-**If it fails**: Run `/speckit.clarify` or `/opsx:explore` to fill gaps → spec review loop → re-confirm.
+**If it fails**: Run `/speckit.clarify` or `/opsx:explore` to fill gaps → re-run inline review → re-confirm.
 
 ---
 
@@ -55,10 +56,10 @@ Between Phase 2 (Planning) and Phase 3/4 (Design/Implementation).
 | TDD test points | Each task includes a test strategy or draft test cases |
 | Acceptance traceability | Each task traces back to a confirmed acceptance criterion from G1 |
 | Risk assessment | High-risk operations have rollback strategies noted |
-| Plan review loop passed | Plan-document-reviewer subagent approved (max 3 iterations) | 
+| Inline plan review passed | Self-review checklist completed (see below) |
 | User reviewed plan | User explicitly reviewed the plan document |
 
-**If it fails**: Fill in missing items → plan review loop → user confirms plan → re-evaluate.
+**If it fails**: Fill in missing items → re-run inline review → user confirms plan → re-evaluate.
 
 ---
 
@@ -74,7 +75,7 @@ Between Phase 3 (UI/UX Design) and Phase 4 (Implementation). Only for UI/UX task
 | User confirmed | User explicitly approved the design | §1 Core mission |
 | Accessibility | WCAG 2.1 AA · responsive · contrast ≥ 4.5:1 | §2.3 |
 
-ui-ux-pro-max v2.0 capabilities: 67 UI styles · 161 color palettes · 57 font pairings · 13 tech stacks · 161 reasoning rules.
+ui-ux-pro-max v2.5.0 capabilities: 67 UI styles · 161 color palettes · 57 font pairings · 14 tech stacks · 161 reasoning rules · 6 specialist skills (banner-design, slides, ui-styling, design-system, design, brand).
 
 **If it fails**: Adjust design → regenerate → re-check.
 
@@ -93,6 +94,7 @@ Between Phase 4 (Implementation) and Phase 5 (Archive). The strictest gate.
 | Evidence archived | Verification output written to `progress.md` with exit code + timestamp | planning-with-files |
 | Constitution compliant | Code quality, test coverage, performance, security meet constitution baselines | constitution |
 | `/opsx:verify` passed | Completeness + Correctness + Coherence validated (OpenSpec expanded, if available) | OpenSpec |
+| MemPalace archived | Spec decisions + key findings persisted to palace (if configured) | MemPalace |
 
 **Two-stage review flow** (from Superpowers):
 1. **Spec conformance** → Does the code match the confirmed spec?
@@ -106,23 +108,37 @@ Between Phase 4 (Implementation) and Phase 5 (Archive). The strictest gate.
 
 ---
 
-## Review Loops (New in v4)
+## Inline Self-Review (replaced subagent review loops in v5)
 
-### Spec Review Loop (integrated into G1)
+Superpowers v5.0.6 replaced subagent-based review loops with inline self-review checklists — reducing review time from ~25 minutes to ~30 seconds per round while maintaining comparable quality.
 
-After writing the spec document, dispatch a spec-document-reviewer subagent:
-1. Reviewer examines spec for completeness, clarity, testability
-2. If issues found → fix → re-dispatch reviewer
-3. Max 3 iterations; if still failing → escalate to user
-4. User reviews written spec before proceeding
+### Spec Inline Review (at G1)
 
-### Plan Review Loop (integrated into G2)
+After writing the spec, run through this checklist before requesting user review:
 
-After writing the implementation plan, dispatch a plan-document-reviewer subagent:
-1. Reviewer examines plan for completeness, file paths, test coverage
-2. If issues found → fix → re-dispatch reviewer
-3. Max 3 iterations; if still failing → escalate to user
-4. User reviews written plan before proceeding
+- [ ] Every requirement has testable acceptance criteria (Given-When-Then)
+- [ ] Spec contains only What & Why — no implementation details leaked
+- [ ] All ambiguous terms are defined or clarified
+- [ ] Scope is bounded — no "and also..." creep
+- [ ] Edge cases and error scenarios are documented
+- [ ] Constitution constraints are referenced where relevant
+- [ ] If multiple subsystems detected → flagged for decomposition
+
+Issues found → fix inline → re-run checklist. If 3+ blocking issues persist → escalate to user.
+
+### Plan Inline Review (at G2)
+
+After writing the plan, run through this checklist before requesting user review:
+
+- [ ] Every task has exact file paths (Create/Modify/Test)
+- [ ] File structure mapping is complete and consistent
+- [ ] Each task traces to an acceptance criterion from G1
+- [ ] Test strategy is concrete (not "add tests later")
+- [ ] High-risk operations have rollback strategies
+- [ ] Task dependencies are explicit and ordered correctly
+- [ ] Estimated scope matches complexity triage level
+
+Issues found → fix inline → re-run checklist. If 3+ blocking issues persist → escalate to user.
 
 ---
 

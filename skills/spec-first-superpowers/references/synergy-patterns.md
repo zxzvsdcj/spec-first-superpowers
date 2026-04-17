@@ -1,20 +1,20 @@
 # Cross-Tool Synergy Patterns
 
-The five integrated projects aren't standalone tools — they form a closed-loop system through these synergy chains.
+The six integrated projects aren't standalone tools — they form a closed-loop system through these synergy chains.
 
 ---
 
-## Chain 1: Constitution → Gates → Review (with Review Loops)
+## Chain 1: Constitution → Gates → Inline Review
 
 **Projects**: Spec-Kit/OpenSpec × Superpowers
 
-The constitution isn't a static document — it's an active checklist verified at every gate. Review loops add automated quality assurance before human review.
+The constitution isn't a static document — it's an active checklist verified at every gate. Inline self-review (v5) provides fast, quality-comparable review without subagent overhead.
 
 ```
 Constitution defines constraints
-  → G1: Spec review loop (subagent) verifies spec alignment
+  → G1: Inline spec review checklist verifies spec alignment (~30 seconds)
     → User reviews written spec
-  → G2: Plan review loop (subagent) verifies plan alignment
+  → G2: Inline plan review checklist verifies plan alignment (~30 seconds)
     → User reviews written plan
   → G4: Two-stage code review verifies code alignment
 ```
@@ -22,9 +22,9 @@ Constitution defines constraints
 - At G1:
   - Spec-Kit: `plan.md` must reference constitution checkpoints; `/speckit.analyze` validates consistency
   - OpenSpec: `config.yaml` → `context` + `rules` inject project constraints
-  - Spec-document-reviewer subagent checks completeness/clarity (max 3 iterations)
+  - Inline spec review catches completeness/clarity issues (fix inline, ~30s per pass)
 - At G2:
-  - Plan-document-reviewer subagent checks file paths/test coverage (max 3 iterations)
+  - Inline plan review catches file path/test coverage gaps (fix inline, ~30s per pass)
   - File structure mapping locks in decomposition decisions
 - At G4:
   - Code review uses constitution clauses as review dimensions
@@ -67,24 +67,25 @@ Error occurs → progress.md logs it (Error/Attempt/Resolution)
 
 ## Chain 3: Design → Persist → Recover
 
-**Projects**: ui-ux-pro-max (v2.0) × planning-with-files
+**Projects**: ui-ux-pro-max (v2.5.0) × planning-with-files
 
-Design decisions persist across sessions, not regenerated each time. v2.0 brings intelligent design system generation with 5 parallel reasoning searches.
+Design decisions persist across sessions, not regenerated each time. v2.5.0 adds specialist skills for banner, slides, brand, and design-system generation.
 
 ```
-v2.0 Design System Generator (5-domain search)
+v2.5.0 Design System Generator (5-domain search)
   → --design-system generates
   → --persist writes design-system/MASTER.md
   → next session auto-loads
 ```
 
 - Phase 3 always uses `--persist` flag
-- v2.0 generation pipeline:
+- v2.5.0 generation pipeline:
   1. Product type matching (161 categories)
   2. Style recommendations (67 styles, BM25 ranking)
   3. Color palette selection (161 industry-specific palettes)
   4. Landing page patterns (24 patterns)
-  5. Typography pairing (57 font combinations)
+  5. Typography pairing (57 font combinations, 1923 Google Fonts DB)
+- Specialist skills: banner-design · slides · ui-styling · design-system · design · brand
 - Output: `design-system/MASTER.md` (global rules) + anti-patterns to avoid
 - Page-specific overrides: `design-system/pages/<page-name>.md`
 - Loading order when building a page:
@@ -92,7 +93,7 @@ v2.0 Design System Generator (5-domain search)
   2. If yes → page rules override MASTER
   3. If no → use MASTER rules
 - Phase 0 (session recovery) detects `design-system/` → auto-loads design context
-- 13 tech stacks supported: React, Next.js, Astro, Vue, Nuxt.js, Nuxt UI, Svelte, SwiftUI, React Native, Flutter, HTML+Tailwind, shadcn/ui, Jetpack Compose
+- 14 tech stacks supported: React, Next.js, Astro, Vue, Nuxt.js, Nuxt UI, Svelte, SwiftUI, React Native, Flutter, HTML+Tailwind, shadcn/ui, Jetpack Compose, Three.js
 
 ---
 
@@ -122,6 +123,7 @@ Scope check (multiple subsystems?)
   4. Run — confirm it passes
   5. Commit
 - Spec-Kit's `tasks.md` and `task_plan.md` stay in sync (tasks.md describes what; task_plan.md tracks status)
+- Spec-Kit **Workflow Engine** (v0.7.0+): Custom workflows can be registered and discovered via the Catalog system, enabling project-specific execution patterns
 - **Model selection** for subagent execution:
   - Mechanical tasks (1-2 files, clear spec) → fast/cheap model
   - Integration tasks (multi-file coordination) → standard model
@@ -129,7 +131,7 @@ Scope check (multiple subsystems?)
 - Execution strategy selection:
   - **Subagent-Driven**: Fresh subagent per step, two-stage review (spec → quality)
   - **Executing-Plans**: Batch 3 tasks + checkpoint review
-  - **Execution handoff**: After plan review loop, explicitly offer both options
+  - **Execution handoff**: After inline plan review, explicitly offer both options
 
 ---
 
@@ -143,6 +145,7 @@ Completion claims require file-recorded verification evidence. Multi-dimensional
 Run verification command → read full output
   → write to progress.md (exit code + timestamp)
   → /opsx:verify (Completeness × Correctness × Coherence)
+  → MemPalace archive (persist decisions + findings)
   → archive
 ```
 
@@ -153,7 +156,7 @@ Run verification command → read full output
   4. **WRITE**: Record in `progress.md`:
      ```
      ## Verification Evidence
-     - Time: 2026-03-19 14:30
+     - Time: 2026-04-17 14:30
      - Command: `pytest tests/ -v`
      - Result: 34/34 passed, 0 failed
      - Exit code: 0
@@ -162,7 +165,8 @@ Run verification command → read full output
      - **Completeness**: All tasks done, all requirements implemented
      - **Correctness**: Implementation matches spec intent, edge cases handled
      - **Coherence**: Design decisions reflected in code, patterns consistent
-  6. **CLAIM**: State the result based on evidence
+  6. **PERSIST** (MemPalace, if configured): Archive spec decisions and key findings to the palace for cross-session retrieval
+  7. **CLAIM**: State the result based on evidence
 - Archive phase:
   - `finishing-a-development-branch` options (merge/PR/keep/discard) also logged to `progress.md`
   - OpenSpec: `/opsx:archive` moves to `openspec/changes/archive/YYYY-MM-DD-<name>/`
@@ -170,12 +174,48 @@ Run verification command → read full output
 
 ---
 
+## Chain 6: Memory → Context → Continuity
+
+**Projects**: MemPalace × planning-with-files × Superpowers
+
+Cross-session memory ensures specs, decisions, and lessons persist beyond individual sessions. MemPalace provides structured, high-recall (96.6% R@5) local-first storage.
+
+```
+Session start → mempalace_status + mempalace_search (relevant history)
+  → mempalace_diary_read (agent state)
+  → Merge with task_plan.md context
+  → Work (spec / plan / implement)
+  → Persist: mempalace_kg_add (decisions) + mempalace_add_drawer (verbatim content)
+  → Session end → mempalace_diary_write (phase summary)
+```
+
+- **Session Recovery** (augments G0):
+  - `mempalace_search("project-name spec decision")` → retrieves relevant historical decisions
+  - `mempalace_diary_read(agent="spec-orchestrator")` → last workflow state
+  - `mempalace_kg_query("ProjectName")` → entity relationship timeline
+  - Merged with task_plan.md / progress.md for comprehensive context
+- **Spec Decision Persistence** (at G1):
+  - `mempalace_kg_add(subject, "chose", decision, valid_from=today)` → records architecture decisions
+  - `mempalace_add_drawer(wing=project, room=feature, content=spec_text)` → verbatim spec storage
+- **Cross-Project Pattern Discovery**:
+  - `mempalace_search("auth spec decision")` → finds how auth was handled in other projects
+  - Wing/Room scoping enables precise queries across multiple projects
+- **Agent Diary Audit Trail** (at each Gate):
+  - `mempalace_diary_write(agent="spec-orchestrator", entry="G1|passed|feature|details")`
+  - Creates traceable workflow history across sessions
+- **Knowledge Graph Evolution**:
+  - When specs change: `mempalace_kg_invalidate` → `mempalace_kg_add` → complete decision timeline
+  - `mempalace_kg_timeline("project")` → chronological story of all architectural decisions
+
+---
+
 ## Quick Reference
 
 | When you're... | You need... | Via... |
 |----------------|-------------|--------|
-| Writing a spec | Constitution alignment + spec review loop | Chain 1 |
+| Writing a spec | Constitution alignment + inline spec review | Chain 1 |
 | Hitting errors | Logging + implementer status + debugging | Chain 2 |
-| Doing UI design | v2.0 design generation + persistence | Chain 3 |
+| Doing UI design | v2.5.0 design generation + persistence | Chain 3 |
 | Breaking down tasks | Scope check + file mapping + model selection | Chain 4 |
 | Claiming completion | Verification evidence + multi-dim validation | Chain 5 |
+| Preserving context | MemPalace search + diary + knowledge graph | Chain 6 |
